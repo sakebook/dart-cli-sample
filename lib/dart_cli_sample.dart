@@ -1,3 +1,5 @@
-int calculate() {
-  return 6 * 7;
+import 'dart:io';
+
+String system() {
+  return Platform.operatingSystem;
 }

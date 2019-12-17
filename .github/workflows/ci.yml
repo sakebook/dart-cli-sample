@@ -85,10 +85,10 @@ jobs:
         run: |
           cd bin
           chmod 755 ${{ matrix.file-name }}
-          ./${{ matrix.output-name }}
+          ./${{ matrix.file-name }}
       - name: Run(macos)
         if: matrix.os == 'macos-latest'
         run: |
           cd bin
           chmod 755 ${{ matrix.file-name }}
-          ./${{ matrix.output-name }}
+          ./${{ matrix.file-name }}

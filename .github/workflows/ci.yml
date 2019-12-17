@@ -16,7 +16,6 @@ jobs:
         if: matrix.os == 'windows-latest'
         run: |
           choco install dart-sdk
-          pub get
       - name: Install Dart(ubuntu)
         if: matrix.os == 'ubuntu-latest'
         run: |
@@ -26,13 +25,11 @@ jobs:
           sudo sh -c 'wget -qO- https://storage.googleapis.com/download.dartlang.org/linux/debian/dart_stable.list > /etc/apt/sources.list.d/dart_stable.list'
           sudo apt-get update
           sudo apt-get install dart
-          pub get
       - name: Install Dart(macos)
         if: matrix.os == 'macos-latest'
         run: |
           brew tap dart-lang/dart
           brew install dart
-          pub get
       - name: Build
         run: |
           dart2native bin/main.dart

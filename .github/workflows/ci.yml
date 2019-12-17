@@ -62,7 +62,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest, ubuntu-latest, macos-latest] # https://help.github.com/ja/actions/automating-your-workflow-with-github-actions/virtual-environments-for-github-hosted-runners#supported-runners-and-hardware-resources
+        os: [windows-latest, ubuntu-latest, macos-latest]
+        include:
+          - os: windows-latest
+            file-name: windows.exe
+          - os: ubuntu-latest
+            file-name: ubuntu
+          - os: macos-latest
+            file-name: macos
     steps:
       - name: Download artifact
         uses: actions/download-artifact@v1

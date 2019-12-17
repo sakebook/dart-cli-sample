@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v1
-      - name: Install Dart(windows)
+      - name: Install Dart and build(windows)
         if: matrix.os == 'windows-latest'
         run: |
           choco install dart-sdk
@@ -20,7 +20,8 @@ jobs:
           Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
           refreshenv
           pub get
-      - name: Install Dart(ubuntu)
+          dart2native bin/main.dart
+      - name: Install Dart and build(ubuntu)
         if: matrix.os == 'ubuntu-latest'
         run: |
           sudo apt-get update
@@ -32,14 +33,13 @@ jobs:
           echo 'export PATH="$PATH:/usr/lib/dart/bin"' >> ~/.profile
           source ~/.profile
           pub get
-      - name: Install Dart(macos)
+          dart2native bin/main.dart
+      - name: Install Dart and build(macos)
         if: matrix.os == 'macos-latest'
         run: |
           brew tap dart-lang/dart
           brew install dart
           pub get
-      - name: Build
-        run: |
           dart2native bin/main.dart
       - name: Upload artifact
         uses: actions/upload-artifact@v1

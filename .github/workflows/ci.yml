@@ -7,11 +7,20 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
+      # https://help.github.com/ja/actions/automating-your-workflow-with-github-actions/virtual-environments-for-github-hosted-runners#supported-runners-and-hardware-resources
       matrix:
-        os: [windows-latest, ubuntu-latest, macos-latest] # https://help.github.com/ja/actions/automating-your-workflow-with-github-actions/virtual-environments-for-github-hosted-runners#supported-runners-and-hardware-resources
+        os: [windows-latest, ubuntu-latest, macos-latest]
+        include:
+          - os: windows-latest
+            file-name: windows.exe
+          - os: ubuntu-latest
+            file-name: ubuntu
+          - os: macos-latest
+            file-name: macos
     steps:
       - name: Checkout
         uses: actions/checkout@v1
+        # https://dart.dev/get-dart
       - name: Install Dart and build(windows)
         if: matrix.os == 'windows-latest'
         run: |
@@ -20,7 +29,7 @@ jobs:
           Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
           refreshenv
           pub get
-          dart2native bin/main.dart
+          dart2native bin/main.dart -o bin/${{ matrix.output-name }}
       - name: Install Dart and build(ubuntu)
         if: matrix.os == 'ubuntu-latest'
         run: |
@@ -33,19 +42,19 @@ jobs:
           echo 'export PATH="$PATH:/usr/lib/dart/bin"' >> ~/.profile
           source ~/.profile
           pub get
-          dart2native bin/main.dart
+          dart2native bin/main.dart -o bin/${{ matrix.output-name }}
       - name: Install Dart and build(macos)
         if: matrix.os == 'macos-latest'
         run: |
           brew tap dart-lang/dart
           brew install dart
           pub get
-          dart2native bin/main.dart
+          dart2native bin/main.dart -o bin/${{ matrix.output-name }}
       - name: Upload artifact
         uses: actions/upload-artifact@v1
         with:
           name: bin
-          path: bin/main.exe
+          path: bin
   execute:
     name: Run native code
     needs: build
@@ -63,16 +72,16 @@ jobs:
         if: matrix.os == 'windows-latest'
         run: |
           cd bin
-          .\main.exe
+          .\${{ matrix.output-name }}
       - name: Run(ubuntu)
         if: matrix.os == 'ubuntu-latest'
         run: |
           cd bin
-          chmod 755 main.exe
-          ./main.exe
+          chmod 755 ${{ matrix.output-name }}
+          ./${{ matrix.output-name }}
       - name: Run(macos)
         if: matrix.os == 'macos-latest'
         run: |
           cd bin
-          chmod 755 main.exe
-          ./main.exe
+          chmod 755 ${{ matrix.output-name }}
+          ./${{ matrix.output-name }}

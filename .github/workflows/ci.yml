@@ -11,17 +11,19 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v1
-      - name: Install Dart
-      - if: matrix.os == 'windows-latest'
+      - name: Install Dart(windows)
+        if: matrix.os == 'windows-latest'
         run: |
           choco install dart-sdk
           pub get
-      - if: matrix.os == 'ubuntu-latest'
+      - name: Install Dart(ubuntu)
+        if: matrix.os == 'ubuntu-latest'
         run: |
           sudo apt-get update
           sudo apt-get install dart
           pub get
-      - if: matrix.os == 'macos-latest'
+      - name: Install Dart(macos)
+        if: matrix.os == 'macos-latest'
         run: |
           brew tap dart-lang/dart
           brew install dart

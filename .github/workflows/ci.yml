@@ -68,9 +68,11 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: |
           cd bin
+          chmod 755 main.exe
           ./main.exe
       - name: Run(macos)
         if: matrix.os == 'macos-latest'
         run: |
           cd bin
+          chmod 755 main.exe
           ./main.exe

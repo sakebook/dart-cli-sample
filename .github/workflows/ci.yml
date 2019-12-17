@@ -37,9 +37,9 @@ jobs:
         run: |
           brew tap dart-lang/dart
           brew install dart
+          pub get
       - name: Build
         run: |
-          pub get
           dart2native bin/main.dart
       - name: Upload artifact
         uses: actions/upload-artifact@v1

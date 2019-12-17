@@ -29,7 +29,7 @@ jobs:
           Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
           refreshenv
           pub get
-          dart2native bin/main.dart -o bin/${{ matrix.output-name }}
+          dart2native bin/main.dart -o bin/${{ matrix.file-name }}
       - name: Install Dart and build(ubuntu)
         if: matrix.os == 'ubuntu-latest'
         run: |
@@ -42,14 +42,14 @@ jobs:
           echo 'export PATH="$PATH:/usr/lib/dart/bin"' >> ~/.profile
           source ~/.profile
           pub get
-          dart2native bin/main.dart -o bin/${{ matrix.output-name }}
+          dart2native bin/main.dart -o bin/${{ matrix.file-name }}
       - name: Install Dart and build(macos)
         if: matrix.os == 'macos-latest'
         run: |
           brew tap dart-lang/dart
           brew install dart
           pub get
-          dart2native bin/main.dart -o bin/${{ matrix.output-name }}
+          dart2native bin/main.dart -o bin/${{ matrix.file-name }}
       - name: Upload artifact
         uses: actions/upload-artifact@v1
         with:
@@ -72,16 +72,16 @@ jobs:
         if: matrix.os == 'windows-latest'
         run: |
           cd bin
-          .\${{ matrix.output-name }}
+          .\${{ matrix.file-name }}
       - name: Run(ubuntu)
         if: matrix.os == 'ubuntu-latest'
         run: |
           cd bin
-          chmod 755 ${{ matrix.output-name }}
+          chmod 755 ${{ matrix.file-name }}
           ./${{ matrix.output-name }}
       - name: Run(macos)
         if: matrix.os == 'macos-latest'
         run: |
           cd bin
-          chmod 755 ${{ matrix.output-name }}
+          chmod 755 ${{ matrix.file-name }}
           ./${{ matrix.output-name }}

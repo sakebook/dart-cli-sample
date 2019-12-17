@@ -25,6 +25,7 @@ jobs:
           sudo sh -c 'wget -qO- https://storage.googleapis.com/download.dartlang.org/linux/debian/dart_stable.list > /etc/apt/sources.list.d/dart_stable.list'
           sudo apt-get update
           sudo apt-get install dart
+          export PATH="$PATH:/usr/lib/dart/bin"
       - name: Install Dart(macos)
         if: matrix.os == 'macos-latest'
         run: |
@@ -32,6 +33,7 @@ jobs:
           brew install dart
       - name: Build
         run: |
+          pub get
           dart2native bin/main.dart
       - name: Upload artifact
         uses: actions/upload-artifact@v1
@@ -40,6 +42,7 @@ jobs:
           path: bin/main.exe
   execute:
     name: Run native code
+    needs: build
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false

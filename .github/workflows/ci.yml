@@ -16,8 +16,7 @@ jobs:
         if: matrix.os == 'windows-latest'
         run: |
           choco install dart-sdk
-          dart
-          powershell -Command "gcm dart | fl"
+          call refreshenv
       - name: Install Dart(ubuntu)
         if: matrix.os == 'ubuntu-latest'
         run: |
@@ -27,6 +26,7 @@ jobs:
           sudo sh -c 'wget -qO- https://storage.googleapis.com/download.dartlang.org/linux/debian/dart_stable.list > /etc/apt/sources.list.d/dart_stable.list'
           sudo apt-get update
           sudo apt-get install dart
+          dpkg -L dart
           echo 'export PATH="$PATH:/usr/lib/dart/bin"' >> ~/.profile
       - name: Install Dart(macos)
         if: matrix.os == 'macos-latest'

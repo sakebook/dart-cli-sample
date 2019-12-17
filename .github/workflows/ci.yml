@@ -21,16 +21,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v1
         # https://dart.dev/get-dart
-      - name: Install Dart and build(windows)
+      - name: Install Dart(windows)
         if: matrix.os == 'windows-latest'
         run: |
           choco install dart-sdk
-          $env:ChocolateyInstall = Convert-Path "$((Get-Command choco).Path)\..\.."
-          Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
-          refreshenv
-          pub get
-          dart2native bin/main.dart -o bin/${{ matrix.file-name }}
-      - name: Install Dart and build(ubuntu)
+      - name: Install Dart(ubuntu)
         if: matrix.os == 'ubuntu-latest'
         run: |
           sudo apt-get update
@@ -39,15 +34,29 @@ jobs:
           sudo sh -c 'wget -qO- https://storage.googleapis.com/download.dartlang.org/linux/debian/dart_stable.list > /etc/apt/sources.list.d/dart_stable.list'
           sudo apt-get update
           sudo apt-get install dart
-          echo 'export PATH="$PATH:/usr/lib/dart/bin"' >> ~/.profile
-          source ~/.profile
-          pub get
-          dart2native bin/main.dart -o bin/${{ matrix.file-name }}
-      - name: Install Dart and build(macos)
+      - name: Install Dart(macos)
         if: matrix.os == 'macos-latest'
         run: |
           brew tap dart-lang/dart
           brew install dart
+      - name: Build(windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          $env:ChocolateyInstall = Convert-Path "$((Get-Command choco).Path)\..\.."
+          Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
+          refreshenv
+          pub get
+          dart2native bin/main.dart -o bin/${{ matrix.file-name }}
+      - name: Build(ubuntu)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          echo 'export PATH="$PATH:/usr/lib/dart/bin"' >> ~/.profile
+          source ~/.profile
+          pub get
+          dart2native bin/main.dart -o bin/${{ matrix.file-name }}
+      - name: Build(macos)
+        if: matrix.os == 'macos-latest'
+        run: |
           pub get
           dart2native bin/main.dart -o bin/${{ matrix.file-name }}
       - name: Upload artifact
@@ -56,7 +65,7 @@ jobs:
           name: bin
           path: bin
   execute:
-    name: Run native code
+    name: Run artifact
     needs: build
     runs-on: ${{ matrix.os }}
     strategy:
